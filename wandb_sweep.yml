@@ -1,5 +1,6 @@
 program: main.py
-method: grid
+method: random
+run_cap: 50
 project: ILP_baselines
 name: raw_test
 metric:
@@ -27,13 +28,13 @@ parameters:
   encoding:
     values: ["natural", "pointer"]
   timeout:
-    values: [60, 600, 1800]
+    value: 1800
   max_vars:
-    values: [6, 12, 15]
+    values: [12, 15]
   max_clauses:
-    values: [1, 2, 4, 6]
+    values: [1, 2, 4]
   max_size:
-    values: [12, 18, 24]
+    values: [12, 24]
   singleton_vars:
     value: False
   predicate_invention:
