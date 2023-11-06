@@ -1,0 +1,35 @@
+program: main.py
+method: grid
+project: ILP_baselines
+name: raw_test
+metric:
+  name: avg_test_f1
+  goal: maximize
+parameters:
+  output_folder:
+    value: "exp"
+  save_options:
+    value: True
+  wandb_project:
+    value: "ILP_baselines"
+  csv_dir: ["annotations/easy_100x15_1.0-1.0", "annotations/medium_125x10_1.0-1.0", "annotations/hard_125x23_1.0-1.0"]
+  train_csv: "train_annotations.csv"
+  test_csv: "test_annotations.csv"
+  prefix: "minimal"
+  cheat_prefix: [~, "cheat"]
+  engine: ["popper", "aleph"]
+  encoding: ["natural", "pointer"]
+  timeout: [60, 600, 1800]
+  max_vars: [6, 12, 15]
+  max_clauses: [1, 2, 4]
+  max_size: [12, 18, 24]
+  singleton_vars: False
+  predicate_invention: False
+  recursion: False
+  max_literals: 40
+  min_acc: 0.5
+  noise: 5
+  i: 5
+  min_pos: 2
+  depth: 15
+  nodes: 20000
