@@ -1,6 +1,5 @@
 import argparse
 import os
-import pprint
 import sys
 import time
 import wandb

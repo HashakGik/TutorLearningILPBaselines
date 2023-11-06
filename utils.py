@@ -239,6 +239,9 @@ def compute_metrics(bg_file: str, theory: dict, examples: str) -> dict:
     metrics = {}
     pl = pyswip.Prolog()
 
+    pl.assertz(":- dynamic(pos/1)")
+    pl.assertz(":- dynamic(neg/1)")
+
     pl.assertz("tp(N) :- aggregate_all(count, (pos(Y), arg(1, Y, X), distinct(valid(X))), N)")
     pl.assertz("tn(N) :- aggregate_all(count, (neg(Y), arg(1, Y, X), distinct(not(valid(X)))), N)")
     pl.assertz("fp(N) :- aggregate_all(count, (neg(Y), arg(1, Y, X), distinct(valid(X))), N)")
