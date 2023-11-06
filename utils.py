@@ -54,6 +54,16 @@ class ArgBoolean:
             raise argparse.ArgumentTypeError(f"Invalid value specified (expected boolean): {value}")
         return val
 
+class ArgString:
+    """Implement the notion of 'string' when passed as input argument to the program, deeply checking it.
+    It allows the user to provide it in different forms {1, 'True', 'true', 'yes'}, {0, 'False', 'false', 'no'}."""
+
+    def __call__(self, value: str | bool | int) -> bool:
+        val = str(value)
+
+        if val == "None":
+            val = None
+        return val
 
 def generate_experiment_name(prefix: str | None = None, suffix: str | None = None) -> str:
     """Generate a dummy name for an experiment, such as 2023-08-10_17-06-22_Chianina.

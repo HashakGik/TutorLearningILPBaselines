@@ -22,22 +22,22 @@ if len(sys.argv) == 1:
 
 # Customizable options
 arg_parser = argparse.ArgumentParser()
-arg_parser.add_argument("--output_folder", help="Output folder (default: exp)", type=str, default="exp")
+arg_parser.add_argument("--output_folder", help="Output folder (default: exp)", type=ArgString(), default="exp")
 arg_parser.add_argument("--save_options", help="Save options at the beginning of experiment.",
                         type=ArgBoolean(), default=True)
 arg_parser.add_argument("--wandb_project", help="Use W&B, this is the project name (default: None)",
-                        type=str, default=None)
+                        type=ArgString(), default=None)
 arg_parser.add_argument("--wandb_group", help="Group within the W&B project name (default: None)",
-                        type=str, default=None)
-arg_parser.add_argument('--csv_dir', help="Annotations folder (default .)", type=str, default=".")
-arg_parser.add_argument('--train_csv', help="Train annotations", type=str, default="train_annotations.csv")
-arg_parser.add_argument('--test_csv', help="Test annotations (optional)", type=str, default=None)
-arg_parser.add_argument('--prefix', help="Background knowledge and bias prefix (looking for _{natural|pointer}_bg.pl and _{natural|pointer}_{popper|aleph}_bias.pl files)", type=str, default="minimal")
-arg_parser.add_argument('--prefix_cheat', help="Cheat predicates prefix (looking for _{natural|pointer}_bg.pl and _{natural|pointer}_{popper|aleph}_bias.pl files)", type=str, default=None)
+                        type=ArgString(), default=None)
+arg_parser.add_argument('--csv_dir', help="Annotations folder (default .)", type=ArgString(), default=".")
+arg_parser.add_argument('--train_csv', help="Train annotations", type=ArgString(), default="train_annotations.csv")
+arg_parser.add_argument('--test_csv', help="Test annotations (optional)", type=ArgString(), default=None)
+arg_parser.add_argument('--prefix', help="Background knowledge and bias prefix (looking for _{natural|pointer}_bg.pl and _{natural|pointer}_{popper|aleph}_bias.pl files)", type=ArgString(), default="minimal")
+arg_parser.add_argument('--prefix_cheat', help="Cheat predicates prefix (looking for _{natural|pointer}_bg.pl and _{natural|pointer}_{popper|aleph}_bias.pl files)", type=ArgString(), default=None)
 arg_parser.add_argument('--engine', help="The engine to be used in "
-                                         "{'aleph', 'popper'}", type=str, default="popper", choices= ["aleph", "popper"])
+                                         "{'aleph', 'popper'}", type=ArgString(), default="popper", choices= ["aleph", "popper"])
 arg_parser.add_argument('--encoding', help="The encoding to be used in "
-                                         "{'natural', 'pointer'}", type=str, default="natural", choices= ["natural", "pointer"])
+                                         "{'natural', 'pointer'}", type=ArgString(), default="natural", choices= ["natural", "pointer"])
 arg_parser.add_argument('--timeout', help="Timeout for execution (in seconds)", type=ArgNumber(int, min_val=0, max_val=7200), default=600)
 
 # Shared biases:

@@ -20,7 +20,7 @@ parameters:
     value: "test_annotations.csv"
   prefix:
     value: "minimal"
-  cheat_prefix:
+  prefix_cheat:
     values: [~, "cheat"]
   engine:
     values: ["popper", "aleph"]
