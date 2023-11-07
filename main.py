@@ -13,6 +13,8 @@ from utils import *
 from run_popper import prepare_files_popper, run_popper
 from run_aleph import prepare_files_aleph, run_aleph
 
+
+
 # initial checks
 assert __name__ == "__main__", "Invalid usage! Run this script from command line, do not import it!"
 if len(sys.argv) == 1:
@@ -90,10 +92,11 @@ with tempfile.TemporaryDirectory() as tmp_dir:
     test_prefix = os.path.join(tmp_dir, "{}_test.pl")
     test_metrics = compute_metrics(test_bg, progs, test_prefix)
 
-results = {task_id: {"theory": progs[task_id],
+results = {int(task_id): {"theory": progs[task_id],
                      "train": {k: v for k, v in train_metrics[task_id].items()},
                      "test": {k: v for k, v in test_metrics[task_id].items()}
                      } for task_id in progs.keys()}
+
 
 opts["time"] = elapsed_time(start_time, time.time())
 
@@ -102,14 +105,16 @@ output_folder = os.path.abspath(opts['output_folder'])
 opts['exp_name'] = exp_name
 opts['command_line'] = "python " + (" ".join("\""+arg+"\"" if " " in arg else arg for arg in sys.argv))
 
-tmp = {"opts": opts, "results": results}
+tmp = {"opts": {k: v for k, v in opts.items()}, "results": {k: v for k, v in results.items()}}
 tmp["avg_test_f1"] = sum([v["test"]["f1"] for v in results.values()]) / len(results.keys())
+
 
 if opts['save_options']:
     os.makedirs(output_folder, exist_ok=True)
     out_file = os.path.join(output_folder, "{}.yml".format(opts['exp_name']))
     with open(out_file, "w") as file:
-        yaml.dump(tmp, file)
+        yaml.dump(tmp, file, default_flow_style=False)
+
 
 # setup W&B
 wb = None

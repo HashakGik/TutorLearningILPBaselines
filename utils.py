@@ -239,15 +239,15 @@ def compute_metrics(bg_file: str, theory: dict, examples: str) -> dict:
     metrics = {}
     pl = pyswip.Prolog()
 
-    pl.assertz(":- dynamic(pos/1)")
-    pl.assertz(":- dynamic(neg/1)")
-
     pl.assertz("tp(N) :- aggregate_all(count, (pos(Y), arg(1, Y, X), distinct(valid(X))), N)")
     pl.assertz("tn(N) :- aggregate_all(count, (neg(Y), arg(1, Y, X), distinct(not(valid(X)))), N)")
     pl.assertz("fp(N) :- aggregate_all(count, (neg(Y), arg(1, Y, X), distinct(valid(X))), N)")
     pl.assertz("fn(N) :- aggregate_all(count, (pos(Y), arg(1, Y, X), distinct(not(valid(X)))), N)")
 
     for task_id in theory.keys():
+        next(pl.query("dynamic(pos/1)"))
+        next(pl.query("dynamic(neg/1)"))
+
         if theory[task_id] is None:
             metrics[task_id] = {"acc": 0.0, "pr": 0.0, "rec": 0.0, "f1": 0.0}
         else:
@@ -273,10 +273,10 @@ def compute_metrics(bg_file: str, theory: dict, examples: str) -> dict:
             f1 = 0.0
 
             if len(out) > 0:
-                tp = out[0]["TP"]
-                tn = out[0]["TN"]
-                fp = out[0]["FP"]
-                fn = out[0]["FN"]
+                tp = float(out[0]["TP"])
+                tn = float(out[0]["TN"])
+                fp = float(out[0]["FP"])
+                fn = float(out[0]["FN"])
 
                 if tp + tn + fp + fn > 0:
                     acc = (tp + tn) / (tp + tn + fp + fn)
