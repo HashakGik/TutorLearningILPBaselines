@@ -1,10 +1,9 @@
 program: main.py
-method: random
-run_cap: 50
+method: grid
 project: ILP_baselines
-name: raw_test
+name: hard_sweep
 metric:
-  name: avg_test_f1
+  name: avg_test_macro_acc
   goal: maximize
 parameters:
   output_folder:
@@ -14,13 +13,13 @@ parameters:
   wandb_project:
     value: "ILP_baselines"
   csv_dir:
-    values: ["annotations/easy_100x15_1.0-1.0", "annotations/medium_125x10_1.0-1.0", "annotations/hard_125x23_1.0-1.0"]
+    value: "annotations/hard_100x23_1.0-1.0"
   train_csv:
     value: "train_annotations.csv"
   test_csv:
     value: "test_annotations.csv"
   prefix:
-    value: "minimal"
+    values: ["minimal", "normal"]
   prefix_cheat:
     values: [~, "cheat"]
   engine:
@@ -32,15 +31,15 @@ parameters:
   max_vars:
     values: [12, 15]
   max_clauses:
-    values: [1, 2, 4]
+    values: [2, 4]
   max_size:
-    values: [12, 24]
+    values: [6, 12, 15]
   singleton_vars:
-    value: False
+    values: [True, False]
   predicate_invention:
-    value: False
+    values: [True, False]
   recursion:
-    value: False
+    values: [True, False]
   max_literals:
     value: 40
   min_acc:

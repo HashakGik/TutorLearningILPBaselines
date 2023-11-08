@@ -1,0 +1,56 @@
+program: main.py
+method: grid
+project: ILP_baselines
+name: medium_sweep
+metric:
+  name: avg_test_macro_acc
+  goal: maximize
+parameters:
+  output_folder:
+    value: "exp"
+  save_options:
+    value: True
+  wandb_project:
+    value: "ILP_baselines"
+  csv_dir:
+    value: "annotations/medium_100x10_1.0-1.0"
+  train_csv:
+    value: "train_annotations.csv"
+  test_csv:
+    value: "test_annotations.csv"
+  prefix:
+    values: ["minimal", "normal"]
+  prefix_cheat:
+    values: [~, "cheat"]
+  engine:
+    values: ["popper", "aleph"]
+  encoding:
+    values: ["natural", "pointer"]
+  timeout:
+    value: 1800
+  max_vars:
+    values: [6, 12, 15]
+  max_clauses:
+    value: 2
+  max_size:
+    value: 12
+  singleton_vars:
+    values: [True, False]
+  predicate_invention:
+    values: [True, False]
+  recursion:
+    values: [True, False]
+  max_literals:
+    value: 40
+  min_acc:
+    value: 0.5
+  noise:
+    value: 5
+  i:
+    value: 5
+  min_pos:
+    value: 2
+  depth:
+    value: 15
+  nodes:
+    value: 20000

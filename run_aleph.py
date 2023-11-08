@@ -128,6 +128,11 @@ def run_aleph(df: pd.DataFrame, path: str, config: dict) -> dict:
 
     bias = os.path.join(path, "bias.pl")
 
+    if "timeout" in config:
+        timeout = config["timeout"]
+    else:
+        timeout = None
+
 
     for task_id in df["task_id"].unique():
         if df.groupby("task_id")["label"].sum()[task_id] > 0:
@@ -143,7 +148,12 @@ def run_aleph(df: pd.DataFrame, path: str, config: dict) -> dict:
             return_dict = manager.dict()
             p = Process(target=exec, args=(bg, pos, neg, bias, return_dict))
             p.start()
-            p.join()
+            if timeout is None:
+                p.join()
+            else:
+                p.join(timeout)
+                if p.exitcode is None:
+                    p.kill()
 
             if "prog" in return_dict and return_dict["prog"] is not None:
                 out[task_id] = return_dict["prog"]

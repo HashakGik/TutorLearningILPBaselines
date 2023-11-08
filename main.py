@@ -36,9 +36,9 @@ arg_parser.add_argument('--test_csv', help="Test annotations (optional)", type=A
 arg_parser.add_argument('--prefix', help="Background knowledge and bias prefix (looking for _{natural|pointer}_bg.pl and _{natural|pointer}_{popper|aleph}_bias.pl files)", type=ArgString(), default="minimal")
 arg_parser.add_argument('--prefix_cheat', help="Cheat predicates prefix (looking for _{natural|pointer}_bg.pl and _{natural|pointer}_{popper|aleph}_bias.pl files)", type=ArgString(), default=None)
 arg_parser.add_argument('--engine', help="The engine to be used in "
-                                         "{'aleph', 'popper'}", type=ArgString(), default="popper", choices= ["aleph", "popper"])
+                                         "{'aleph', 'popper'}", type=ArgString(), default="popper", choices=["aleph", "popper"])
 arg_parser.add_argument('--encoding', help="The encoding to be used in "
-                                         "{'natural', 'pointer'}", type=ArgString(), default="natural", choices= ["natural", "pointer"])
+                                         "{'natural', 'pointer'}", type=ArgString(), default="natural", choices=["natural", "pointer"])
 arg_parser.add_argument('--timeout', help="Timeout for execution (in seconds)", type=ArgNumber(int, min_val=0, max_val=7200), default=600)
 
 # Shared biases:
@@ -62,6 +62,20 @@ arg_parser.add_argument('--nodes', help="nodes to explore during search (aleph o
 
 
 opts = vars(arg_parser.parse_args())
+
+# setup W&B
+wb = None
+if opts['wandb_project'] is not None:
+    if opts['wandb_group'] is not None:
+        wb = wandb.init(project=opts['wandb_project'], group=opts['wandb_group'], config=opts)
+    else:
+        wb = wandb.init(project=opts['wandb_project'], config=opts)
+
+# Reject illegal combinations.
+assert opts["prefix"] != "minimal" or opts["prefix_cheat"] is None, "Cannot use cheat predicates together with the minimal knowledge base."
+assert opts["prefix"] != "normal" or (not opts["predicate_invention"] and not opts["recursion"] and not opts["singleton_vars"]), "Cannot use predicate invention, recursion or singletons with cheat knowledge base."
+assert opts["engine"] != "aleph" or (not opts["predicate_invention"] and not opts["recursion"] and not opts["singleton_vars"]), "Cannot use predicate invention, recursion or singletons with engine aleph."
+
 
 train_df = pd.read_csv(os.path.join(opts["csv_dir"], opts["train_csv"]))
 test_df = pd.read_csv(os.path.join(opts["csv_dir"], opts["test_csv"]))
@@ -92,10 +106,15 @@ with tempfile.TemporaryDirectory() as tmp_dir:
     test_prefix = os.path.join(tmp_dir, "{}_test.pl")
     test_metrics = compute_metrics(test_bg, progs, test_prefix)
 
-results = {int(task_id): {"theory": progs[task_id],
-                     "train": {k: v for k, v in train_metrics[task_id].items()},
-                     "test": {k: v for k, v in test_metrics[task_id].items()}
-                     } for task_id in progs.keys()}
+results = {}
+
+results["train"] = [({k: v for k, v in train_metrics[tid].items()} if tid in train_metrics
+                     else {k: 0 for k in ["acc", "pr", "rec", "f1", "macro_acc", "tp", "tn", "fp", "fn"]})
+                    for tid in range(max(train_metrics.keys()) + 1)]
+results["test"] = [({k: v for k, v in test_metrics[tid].items()} if tid in test_metrics
+                     else {k: 0 for k in ["acc", "pr", "rec", "f1", "macro_acc", "tp", "tn", "fp", "fn"]})
+                    for tid in range(max(test_metrics.keys()) + 1)]
+
 
 
 opts["time"] = elapsed_time(start_time, time.time())
@@ -105,8 +124,11 @@ output_folder = os.path.abspath(opts['output_folder'])
 opts['exp_name'] = exp_name
 opts['command_line'] = "python " + (" ".join("\""+arg+"\"" if " " in arg else arg for arg in sys.argv))
 
-tmp = {"opts": {k: v for k, v in opts.items()}, "results": {k: v for k, v in results.items()}}
-tmp["avg_test_f1"] = sum([v["test"]["f1"] for v in results.values()]) / len(results.keys())
+tmp = {"opts": {k: v for k, v in opts.items()},
+       "theories": [(progs[tid] if tid in progs else None) for tid in range(max(progs.keys()) + 1)],
+       "results": {k: v for k, v in results.items()}}
+
+tmp["avg_test_macro_acc"] = sum([x["macro_acc"] for x in results["test"]]) / len(results["test"])
 
 
 if opts['save_options']:
@@ -116,15 +138,8 @@ if opts['save_options']:
         yaml.dump(tmp, file, default_flow_style=False)
 
 
-# setup W&B
-wb = None
+# logging to W&B
 if opts['wandb_project'] is not None:
-    if opts['wandb_group'] is not None:
-        wb = wandb.init(project=opts['wandb_project'], group=opts['wandb_group'], config=opts)
-    else:
-        wb = wandb.init(project=opts['wandb_project'], config=opts)
-
-    # logging to W&B
     wb.log(tmp)
 
     wb.finish()

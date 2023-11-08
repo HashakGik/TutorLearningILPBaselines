@@ -127,7 +127,12 @@ def run_popper(df: pd.DataFrame, path: str, config: dict) -> dict:
             return_dict = manager.dict()
             p = Process(target=exec, args=(settings, return_dict))
             p.start()
-            p.join()
+            if timeout is None:
+                p.join()
+            else:
+                p.join(timeout)
+                if p.exitcode is None:
+                    p.kill()
 
             if "prog" in return_dict and return_dict["prog"] is not None:
                 out[task_id] = format_prog(order_prog(return_dict["prog"]))

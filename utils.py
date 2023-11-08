@@ -249,7 +249,7 @@ def compute_metrics(bg_file: str, theory: dict, examples: str) -> dict:
         next(pl.query("dynamic(neg/1)"))
 
         if theory[task_id] is None:
-            metrics[task_id] = {"acc": 0.0, "pr": 0.0, "rec": 0.0, "f1": 0.0}
+            metrics[task_id] = {"acc": 0.0, "pr": 0.0, "rec": 0.0, "f1": 0.0, "macro_acc": 0.0, "tp": 0, "tn": 0, "fp": 0, "fn": 0}
         else:
             with open(bg_file.format(task_id), "r") as file:
                 for r in file.read().split("\n"):
@@ -271,6 +271,11 @@ def compute_metrics(bg_file: str, theory: dict, examples: str) -> dict:
             pr = 0.0
             rec = 0.0
             f1 = 0.0
+            tp = 0
+            tn = 0
+            fp = 0
+            fn = 0
+            macro_acc = 0.0
 
             if len(out) > 0:
                 tp = float(out[0]["TP"])
@@ -284,11 +289,15 @@ def compute_metrics(bg_file: str, theory: dict, examples: str) -> dict:
                     pr = tp / (tp + fp)
                 if tp + fn > 0:
                     rec = tp / (tp + fn)
+                if tn + fp > 0:
+                    fpr = tn / (tn + fp)
                 if pr + rec > 0:
                     f1 = 2 * pr * rec / (pr + rec)
 
+                macro_acc = (rec + fpr) / 2
 
-            metrics[task_id] = {"acc": acc, "pr": pr, "rec": rec, "f1": f1}
+
+            metrics[task_id] = {"acc": acc, "pr": pr, "rec": rec, "f1": f1, "macro_acc": macro_acc, "tp": tp, "tn": tn, "fp": fp, "fn": fn}
 
 
             with open(bg_file.format(task_id), "r") as file:
