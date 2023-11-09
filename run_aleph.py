@@ -153,7 +153,8 @@ def run_aleph(df: pd.DataFrame, path: str, config: dict) -> dict:
             else:
                 p.join(timeout)
                 if p.exitcode is None:
-                    p.kill()
+                    p.terminate()
+                    p.join()
 
             if "prog" in return_dict and return_dict["prog"] is not None:
                 out[task_id] = return_dict["prog"]
