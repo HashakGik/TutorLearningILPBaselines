@@ -1,7 +1,7 @@
 program: main.py
 method: grid
 project: ILP_baselines
-name: medium_sweep_popper
+name: medium_sweep_aleph
 metric:
   name: avg_test_macro_acc
   goal: maximize
@@ -24,7 +24,7 @@ parameters:
     values: [~, "cheat"]
   engine:
     #values: ["popper", "aleph"]
-    value: "popper"
+    value: "aleph"
   encoding:
     values: ["natural", "pointer"]
   timeout:
