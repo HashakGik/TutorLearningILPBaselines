@@ -13,7 +13,7 @@ parameters:
   wandb_project:
     value: "ILP_baselines"
   csv_dir:
-    value: "annotations/hard_100x23_1.0-1.0"
+    value: "annotations/hard_100x18_1.0-1.0"
   train_csv:
     value: "train_annotations.csv"
   test_csv:

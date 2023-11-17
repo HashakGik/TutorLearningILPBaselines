@@ -1,51 +1,47 @@
 body_pred(symmetric_list, 1).
 
-body_pred(forall_same_color, 2).
-body_pred(forall_same_shape, 2).
-body_pred(extract_two_different, 3).
-
-
-body_pred(perpendicular, 1).
-body_pred(forall_palindrome, 1).
+%body_pred(house, 1).
+%body_pred(car, 1).
+%body_pred(tower, 1).
+%body_pred(wagon, 1).
+%body_pred(traffic_light, 1).
+%body_pred(named_object, 1).
+body_pred(is_named_object, 2).
+body_pred(forall_shared_shape, 2).
+body_pred(forall_shared_color, 2).
+body_pred(forall_shared_named_obj, 2).
 body_pred(pseudo_palindrome, 1).
-body_pred(forall_palindrome2, 1).
-body_pred(minimum_count_number, 2).
-body_pred(minimum_count_child, 2).
-body_pred(exists_red_square, 1).
-body_pred(rotate, 2).
-body_pred(majority_color, 2).
-body_pred(majority_shape, 2).
+body_pred(pseudo_palindrome2, 1).
 
 type(symmetric_list, (list_t,)).
 
-type(forall_same_color, (term_t, color_t)).
-type(forall_same_shape, (term_t, shape_t)).
-type(extract_two_different, (term_t, term_t, term_t)).
+%type(house, (term_t,)).
+%type(car, (term_t,)).
+%type(tower, (term_t,)).
+%type(wagon, (term_t,)).
+%type(traffic_light, (term_t,)).
+%type(named_object, (named_obj_t,)).
+type(is_named_object, (term_t, named_obj_t)).
+type(forall_shared_shape, (term_t, shape_t)).
+type(forall_shared_color, (term_t, color_t)).
+type(forall_shared_named_obj, (term_t, named_object_t)).
 
-type(perpendicular, (term_t,)).
-type(forall_palindrome, (list_t,)).
 type(pseudo_palindrome, (list_t,)).
-type(forall_palindrome2, (list_t,)).
-type(minimum_count_number, (list_t, int)).
-type(minimum_count_child, (list_t, term_t)).
-type(exists_red_square, (list_t,)).
-type(rotate, (list_t, list_t)).
-type(majority_color, (color_t, list_t)).
-type(majority_shape, (shape_t, list_t)).
+type(pseudo_palindrome2, (list_t,)).
 
 direction(symmetric_list, (in,)).
 
-direction(forall_same_color, (in, out)).
-direction(forall_same_shape, (in, out)).
-direction(extract_two_different, (in, out, out)).
+%direction(house, (in,)).
+%direction(car, (in,)).
+%direction(tower, (in,)).
+%direction(wagon, (in,)).
+%direction(traffic_light, (in,)).
+%direction(named_object, (in,)).
+direction(is_named_object, (in, out)).
+direction(forall_shared_shape, (in, out)).
+direction(forall_shared_color, (in, out)).
+direction(forall_shared_named_obj, (in, out)).
 
-direction(perpendicular, (in,)).
-direction(forall_palindrome, (in,)).
 direction(pseudo_palindrome, (in,)).
-direction(forall_palindrome2, (in,)).
-direction(minimum_count_number, (in,out)).
-direction(minimum_count_child, (in,out)).
-direction(exists_red_square, (in,)).
-direction(rotate, (in,out)).
-direction(majority_color, (out,in)).
-direction(majority_shape, (out,in)).
+direction(pseudo_palindrome2, (in,)).
+
