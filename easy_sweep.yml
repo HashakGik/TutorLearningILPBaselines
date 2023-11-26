@@ -16,6 +16,8 @@ parameters:
     value: "annotations/easy_100x20_1.0-1.0"
   train_csv:
     value: "train_annotations.csv"
+  val_csv:
+    value: "val_annotations.csv"
   test_csv:
     value: "test_annotations.csv"
   prefix:
