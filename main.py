@@ -32,6 +32,7 @@ arg_parser.add_argument("--wandb_group", help="Group within the W&B project name
                         type=ArgString(), default=None)
 arg_parser.add_argument('--csv_dir', help="Annotations folder (default .)", type=ArgString(), default=".")
 arg_parser.add_argument('--train_csv', help="Train annotations", type=ArgString(), default="train_annotations.csv")
+arg_parser.add_argument('--val_csv', help="Validation annotations (optional)", type=ArgString(), default=None)
 arg_parser.add_argument('--test_csv', help="Test annotations (optional)", type=ArgString(), default=None)
 arg_parser.add_argument('--prefix', help="Background knowledge and bias prefix (looking for _{natural|pointer}_bg.pl and _{natural|pointer}_{popper|aleph}_bias.pl files)", type=ArgString(), default="minimal")
 arg_parser.add_argument('--prefix_cheat', help="Cheat predicates prefix (looking for _{natural|pointer}_bg.pl and _{natural|pointer}_{popper|aleph}_bias.pl files)", type=ArgString(), default=None)
@@ -78,17 +79,18 @@ assert opts["engine"] != "aleph" or (not opts["predicate_invention"] and not opt
 
 
 train_df = pd.read_csv(os.path.join(opts["csv_dir"], opts["train_csv"]))
+val_df = pd.read_csv(os.path.join(opts["csv_dir"], opts["val_csv"]))
 test_df = pd.read_csv(os.path.join(opts["csv_dir"], opts["test_csv"]))
 
 start_time = time.time()
 
 with tempfile.TemporaryDirectory() as tmp_dir:
     if opts["engine"] == "popper":
-        prepare_files_popper(tmp_dir, opts, train_df, test_df)
+        prepare_files_popper(tmp_dir, opts, train_df, val_df, test_df)
         progs = run_popper(train_df, tmp_dir, opts)
 
     elif opts["engine"] == "aleph":
-        prepare_files_aleph(tmp_dir, opts, train_df, test_df)
+        prepare_files_aleph(tmp_dir, opts, train_df, val_df, test_df)
         progs = run_aleph(train_df, tmp_dir, opts)
 
     if opts["encoding"] == "natural":
@@ -101,16 +103,23 @@ with tempfile.TemporaryDirectory() as tmp_dir:
 
     if opts["encoding"] == "natural":
         test_bg = os.path.join(tmp_dir, "bg_test.pl")
+        val_bg = os.path.join(tmp_dir, "bg_val.pl")
     else:
         test_bg = os.path.join(tmp_dir, "bg_{}_test.pl")
+        val_bg = os.path.join(tmp_dir, "bg_{}_val.pl")
     test_prefix = os.path.join(tmp_dir, "{}_test.pl")
     test_metrics = compute_metrics(test_bg, progs, test_prefix)
+    val_prefix = os.path.join(tmp_dir, "{}_val.pl")
+    val_metrics = compute_metrics(val_bg, progs, val_prefix)
 
 results = {}
 
 results["train"] = [({k: v for k, v in train_metrics[tid].items()} if tid in train_metrics
                      else {k: 0 for k in ["acc", "pr", "rec", "f1", "macro_acc", "tp", "tn", "fp", "fn"]})
                     for tid in range(max(train_metrics.keys()) + 1)]
+results["val"] = [({k: v for k, v in val_metrics[tid].items()} if tid in val_metrics
+                     else {k: 0 for k in ["acc", "pr", "rec", "f1", "macro_acc", "tp", "tn", "fp", "fn"]})
+                    for tid in range(max(val_metrics.keys()) + 1)]
 results["test"] = [({k: v for k, v in test_metrics[tid].items()} if tid in test_metrics
                      else {k: 0 for k in ["acc", "pr", "rec", "f1", "macro_acc", "tp", "tn", "fp", "fn"]})
                     for tid in range(max(test_metrics.keys()) + 1)]
@@ -129,6 +138,7 @@ tmp = {"opts": {k: v for k, v in opts.items()},
        "results": {k: v for k, v in results.items()}}
 
 tmp["avg_test_macro_acc"] = sum([x["macro_acc"] for x in results["test"]]) / len(results["test"])
+tmp["avg_val_macro_acc"] = sum([x["macro_acc"] for x in results["val"]]) / len(results["val"])
 
 
 if opts['save_options']:
