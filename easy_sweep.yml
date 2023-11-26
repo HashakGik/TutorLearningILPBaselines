@@ -23,7 +23,8 @@ parameters:
   prefix_cheat:
     values: [~, "cheat"]
   engine:
-    values: ["popper", "aleph"]
+    value: "aleph"
+#    values: ["popper", "aleph"]
   encoding:
     values: ["natural", "pointer"]
   timeout:
