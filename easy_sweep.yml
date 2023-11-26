@@ -23,7 +23,8 @@ parameters:
   prefix:
     values: ["minimal", "normal"]
   prefix_cheat:
-    values: [~, "cheat"]
+    #values: [~, "cheat"]
+    value: ~
   engine:
     value: "aleph"
 #    values: ["popper", "aleph"]
@@ -38,11 +39,14 @@ parameters:
   max_size:
     value: 6
   singleton_vars:
-    values: [True, False]
+    #values: [True, False]
+    value: False
   predicate_invention:
-    values: [True, False]
+    #values: [True, False]
+    value: False
   recursion:
-    values: [True, False]
+    #values: [True, False]
+    value: False
   max_literals:
     value: 40
   min_acc:
