@@ -79,8 +79,8 @@ assert opts["engine"] != "aleph" or (not opts["predicate_invention"] and not opt
 
 
 train_df = pd.read_csv(os.path.join(opts["csv_dir"], opts["train_csv"]))
-val_df = pd.read_csv(os.path.join(opts["csv_dir"], opts["val_csv"]))
-test_df = pd.read_csv(os.path.join(opts["csv_dir"], opts["test_csv"]))
+val_df = pd.read_csv(os.path.join(opts["csv_dir"], opts["val_csv"])) if opts["val_csv"] is not None else None
+test_df = pd.read_csv(os.path.join(opts["csv_dir"], opts["test_csv"])) if opts["test_csv"] is not None else None
 
 start_time = time.time()
 
