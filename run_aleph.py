@@ -50,8 +50,8 @@ def prepare_files_aleph(path: str, config: dict, train_df: pd.DataFrame, val_df:
     if val_df is not None:
         for task_id in val_df["task_id"].unique():
             ex_file = os.path.join(path, "{}_val.pl".format(task_id))
-            p_ex_file = os.path.join(path, "{}.f".format(task_id))
-            n_ex_file = os.path.join(path, "{}.n".format(task_id))
+            p_ex_file = os.path.join(path, "{}_val.f".format(task_id))
+            n_ex_file = os.path.join(path, "{}_val.n".format(task_id))
             if config["encoding"] == "natural":
                 pos_examples, neg_examples, examples = build_problem_aleph_natural(val_df, task_id)
                 assert "prefix" in config, "Missing prefix."
@@ -88,8 +88,8 @@ def prepare_files_aleph(path: str, config: dict, train_df: pd.DataFrame, val_df:
     if test_df is not None:
         for task_id in test_df["task_id"].unique():
             ex_file = os.path.join(path, "{}_test.pl".format(task_id))
-            p_ex_file = os.path.join(path, "{}.f".format(task_id))
-            n_ex_file = os.path.join(path, "{}.n".format(task_id))
+            p_ex_file = os.path.join(path, "{}_test.f".format(task_id))
+            n_ex_file = os.path.join(path, "{}_test.n".format(task_id))
             if config["encoding"] == "natural":
                 pos_examples, neg_examples, examples = build_problem_aleph_natural(test_df, task_id)
                 assert "prefix" in config, "Missing prefix."
