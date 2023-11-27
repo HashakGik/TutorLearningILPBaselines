@@ -1,7 +1,7 @@
 program: main.py
 method: grid
 project: ILP_baselines
-name: easy_sweep_test_pointer
+name: easy_sweep
 metric:
   name: avg_test_macro_acc
   goal: maximize
@@ -29,14 +29,11 @@ parameters:
     value: "aleph"
 #    values: ["popper", "aleph"]
   encoding:
-    #values: ["natural", "pointer"]
-    value: "pointer"
+    values: ["natural", "pointer"]
   timeout:
-    #value: 1800
-    values: [1800, 1850, 1900, 1950, 2000]
+    value: 1800
   max_vars:
-    #values: [6, 12]
-    value: 12
+    values: [6, 12]
   max_clauses:
     value: 1
   max_size:
