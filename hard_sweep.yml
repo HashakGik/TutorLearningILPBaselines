@@ -21,10 +21,11 @@ parameters:
   prefix:
     values: ["minimal", "normal"]
   prefix_cheat:
-    values: [~, "cheat"]
+    #values: [~, "cheat"]
+    value: ~
   engine:
-    values: ["popper", "aleph"]
-    #value: "aleph"
+    #values: ["popper", "aleph"]
+    value: "aleph"
   encoding:
     values: ["natural", "pointer"]
   timeout:
