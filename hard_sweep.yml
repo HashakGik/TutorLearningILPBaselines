@@ -18,6 +18,8 @@ parameters:
     value: "train_annotations.csv"
   test_csv:
     value: "test_annotations.csv"
+  val_csv:
+    value: "val_annotations.csv"
   prefix:
     values: ["minimal", "normal"]
   prefix_cheat:
