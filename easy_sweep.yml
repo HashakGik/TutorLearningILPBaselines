@@ -1,7 +1,7 @@
 program: main.py
 method: grid
 project: ILP_baselines
-name: easy_sweep
+name: easy_sweep_24h
 metric:
   name: avg_test_macro_acc
   goal: maximize
@@ -26,27 +26,28 @@ parameters:
     #values: [~, "cheat"]
     value: ~
   engine:
-    value: "aleph"
+    value: "popper"
 #    values: ["popper", "aleph"]
   encoding:
     values: ["natural", "pointer"]
   timeout:
-    value: 1800
+    value: 86400
   max_vars:
-    values: [6, 12]
+    #values: [6, 12]
+    value: 12
   max_clauses:
     value: 1
   max_size:
     value: 6
   singleton_vars:
     #values: [True, False]
-    value: False
+    value: True
   predicate_invention:
     #values: [True, False]
-    value: False
+    value: True
   recursion:
     #values: [True, False]
-    value: False
+    value: True
   max_literals:
     value: 40
   min_acc:
