@@ -74,7 +74,7 @@ if opts['wandb_project'] is not None:
 
 # Reject illegal combinations.
 assert opts["prefix"] != "minimal" or opts["prefix_cheat"] is None, "Cannot use cheat predicates together with the minimal knowledge base."
-assert opts["prefix"] != "normal" or (not opts["predicate_invention"] and not opts["recursion"] and not opts["singleton_vars"]), "Cannot use predicate invention, recursion or singletons with cheat knowledge base."
+assert opts["prefix_cheat"] is None or (not opts["predicate_invention"] and not opts["recursion"] and not opts["singleton_vars"]), "Cannot use predicate invention, recursion or singletons with cheat knowledge base."
 assert opts["engine"] != "aleph" or (not opts["predicate_invention"] and not opts["recursion"] and not opts["singleton_vars"]), "Cannot use predicate invention, recursion or singletons with engine aleph."
 
 
