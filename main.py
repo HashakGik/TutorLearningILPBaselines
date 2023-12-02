@@ -40,7 +40,7 @@ arg_parser.add_argument('--engine', help="The engine to be used in "
                                          "{'aleph', 'popper'}", type=ArgString(), default="popper", choices=["aleph", "popper"])
 arg_parser.add_argument('--encoding', help="The encoding to be used in "
                                          "{'natural', 'pointer'}", type=ArgString(), default="natural", choices=["natural", "pointer"])
-arg_parser.add_argument('--timeout', help="Timeout for execution (in seconds)", type=ArgNumber(int, min_val=0, max_val=7200), default=600)
+arg_parser.add_argument('--timeout', help="Timeout for execution (in seconds)", type=ArgNumber(int, min_val=0, max_val=86400), default=600)
 
 # Shared biases:
 arg_parser.add_argument('--max_vars', help="Maximum number of variables in body", type=ArgNumber(int, min_val=0), default=6)
